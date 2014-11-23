@@ -38,7 +38,7 @@ function add_posttype() {
 		'hierarchical' => false,
 		'menu_position' => null,
                 '_builtin' => false,
-		'supports' => array('title','thumbnail','editor')
+		'supports' => array('title','thumbnail','editor','genesis-seo', 'genesis-cpt-archives-settings')
 	); 
 
 	register_post_type( 'organisation', $args );
