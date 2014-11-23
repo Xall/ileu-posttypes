@@ -44,3 +44,49 @@ function add_posttype() {
 	register_post_type( 'organisation', $args );
 }
 add_action( 'init', 'add_posttype' );	
+
+add_action("template_redirect", 'template_redirects');
+
+// Template selection
+function template_redirects()
+{
+	global $wp;
+	global $wp_query;
+	if ($wp->query_vars["post_type"] == "organisation")
+	{
+		if (have_posts() )
+		{
+			add_filter( 'post_class', 'add_one_third' );
+			add_filter( 'the_content', 'add_image' );
+		}
+		else
+		{
+			$wp_query->is_404 = true;
+		}
+	}
+}
+function add_one_third( $classes ) {
+	global $wp_query;
+	if( ! $wp_query->is_main_query() )
+		return $classes;
+
+	if( is_singular() )
+		return $classes;
+		
+	$classes[] = 'one-third';
+	if( 0 == $wp_query->current_post || 0 == $wp_query->current_post % 3 )
+		$classes[] = 'first';
+	return $classes;
+}
+
+function add_image( $content ){
+	if( has_post_thumbnail() ){
+		if ( is_archive() ){
+			return the_post_thumbnail();
+		}
+		else{
+			return the_post_thumbnail().$content;
+		}
+
+	}
+}
